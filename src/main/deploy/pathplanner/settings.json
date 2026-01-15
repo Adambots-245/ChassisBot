@@ -1,0 +1,9 @@
+{
+  "robotWidth": 0.61,
+  "robotLength": 0.61,
+  "holonomicMode": true,
+  "maxVelocity": 4.0,
+  "maxAcceleration": 3.0,
+  "maxAngularVelocity": 540.0,
+  "maxAngularAcceleration": 720.0
+}
