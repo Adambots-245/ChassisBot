@@ -30,13 +30,14 @@ public final class Constants {
 
     /**
      * Swerve module constants.
+     * Using SDS MK5n modules with Kraken X60 (drive) and X44 (turn)
      */
     public static final class ModuleConstants {
-        // MK4i L2+ gear ratio for Kraken X60
+        // MK5n drive gear ratio - UPDATE when gear option is selected (L1/L2/L3)
         public static final double kDriveGearRatio = 1.0 / 5.9;
 
-        // Steering gear ratio (MK4i)
-        public static final double kTurnGearRatio = 150.0 / 7.0;
+        // Steering gear ratio (MK5n: 287:11)
+        public static final double kTurnGearRatio = 287.0 / 11.0;
 
         // Wheel dimensions (4 inch wheel)
         public static final double kWheelDiameterMeters = Units.inchesToMeters(4.0);
