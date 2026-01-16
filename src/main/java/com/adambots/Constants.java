@@ -1,5 +1,12 @@
 package com.adambots;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -87,5 +94,28 @@ public final class Constants {
         // Camera rotation (degrees)
         public static final double kCameraPitch = 0.0;
         public static final double kCameraYaw = 0.0;
+    }
+
+    /**
+     * QuestNav constants for Meta Quest odometry tracking.
+     */
+    public static final class QuestNavConstants {
+        // Quest mounting offset relative to robot center (meters and radians)
+        // Adjust these based on where you mount the Quest on the robot
+        public static final Transform3d ROBOT_TO_QUEST = new Transform3d(
+            new Translation3d(0.0, 0.0, 0.3),  // x, y, z offset in meters
+            new Rotation3d(0.0, 0.0, 0.0)       // roll, pitch, yaw in radians
+        );
+
+        // Standard deviations for pose estimator (trust levels)
+        // Lower values = more trust in QuestNav data
+        public static final Matrix<N3, N1> QUESTNAV_STD_DEVS = VecBuilder.fill(
+            0.02,   // X position (meters) - trust to 2cm
+            0.02,   // Y position (meters) - trust to 2cm
+            0.035   // Rotation (radians) - trust to ~2 degrees
+        );
+
+        // Enable/disable flag for easy toggling
+        public static final boolean QUESTNAV_ENABLED = true;
     }
 }

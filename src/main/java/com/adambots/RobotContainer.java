@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import com.adambots.lib.subsystems.SwerveSubsystem;
 import com.adambots.lib.utils.Buttons;
 import com.adambots.lib.utils.Buttons.InputCurve;
+import com.adambots.subsystems.QuestNavSubsystem;
 
 /**
  * RobotContainer for ChassisBot testing platform.
@@ -22,6 +23,7 @@ public class RobotContainer {
 
     // Subsystems
     private final SwerveSubsystem swerve;
+    private final QuestNavSubsystem questNav;
 
     // Autonomous chooser
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
@@ -31,6 +33,9 @@ public class RobotContainer {
         swerve = new SwerveSubsystem(
             new File(Filesystem.getDeployDirectory(), "swerve")
         );
+
+        // Initialize QuestNav subsystem for Meta Quest odometry
+        questNav = new QuestNavSubsystem(swerve);
 
         // Configure default commands
         setupDefaultCommands();
@@ -85,6 +90,7 @@ public class RobotContainer {
      *   Button 4:           Center modules
      *   Button 5:           Enable vision
      *   Button 6:           Disable vision
+     *   Button 7:           Reset QuestNav pose
      *   POV Hat:            Snap to cardinal headings
      */
     private void configureBindings() {
@@ -113,6 +119,12 @@ public class RobotContainer {
         // Button 6 - Disable vision pose updates
         Buttons.JoystickButton6.onTrue(
             swerve.disableVisionCommand()
+        );
+
+        // Button 7 - Reset QuestNav pose to current odometry
+        Buttons.JoystickButton7.onTrue(
+            Commands.runOnce(() -> questNav.resetPose())
+                .withName("ResetQuestNavPose")
         );
 
         // POV Hat - Snap to cardinal headings (useful for testing)
@@ -170,6 +182,7 @@ public class RobotContainer {
      */
     private void setupDashboard() {
         SmartDashboard.putData("Swerve Drive", swerve);
+        SmartDashboard.putData("QuestNav", questNav);
     }
 
     /**
