@@ -4,6 +4,7 @@ import edu.wpi.first.math.util.Units;
 
 /**
  * Constants for ChassisBot testing platform.
+ * Configured for 2025 robot chassis (TalonFX drive + SparkMax NEO angle).
  * Organized by subsystem/feature using nested classes.
  */
 public final class Constants {
@@ -23,21 +24,21 @@ public final class Constants {
         public static final double kDeadzone = 0.05;
         public static final double kRotationDeadzone = 0.1;
 
-        // Track width and wheel base (meters) - update with actual measurements
+        // Track width and wheel base (meters) - 24" x 24" chassis
         public static final double kTrackWidth = Units.inchesToMeters(24.0);
         public static final double kWheelBase = Units.inchesToMeters(24.0);
     }
 
     /**
      * Swerve module constants.
-     * Using SDS MK5n modules with Kraken X60 (drive) and X44 (turn)
+     * 2025 Robot: TalonFX (Kraken) drive motors + SparkMax NEO angle motors
      */
     public static final class ModuleConstants {
-        // MK5n drive gear ratio - UPDATE when gear option is selected (L1/L2/L3)
+        // Drive gear ratio (TalonFX Kraken)
         public static final double kDriveGearRatio = 1.0 / 5.9;
 
-        // Steering gear ratio (MK5n: 287:11)
-        public static final double kTurnGearRatio = 287.0 / 11.0;
+        // Steering gear ratio for SparkMax NEO (21.43:1)
+        public static final double kTurnGearRatio = 21.43;
 
         // Wheel dimensions (4 inch wheel)
         public static final double kWheelDiameterMeters = Units.inchesToMeters(4.0);
@@ -73,19 +74,23 @@ public final class Constants {
 
     /**
      * Vision constants for PhotonVision.
+     * 2025 Robot: 2 front cameras mounted on swerve module structure.
      */
     public static final class VisionConstants {
-        // Camera name (must match PhotonVision configuration)
-        public static final String kCameraName = "Front";
+        // Left camera (mounted on front-left, angled left)
+        public static final String kLeftCameraName = "Left";
+        public static final double kLeftCameraXOffset = Units.inchesToMeters(15.0);   // Forward from center
+        public static final double kLeftCameraYOffset = Units.inchesToMeters(11.75);  // Left of center
+        public static final double kLeftCameraZOffset = Units.inchesToMeters(8.0);    // Height from floor
+        public static final double kLeftCameraPitch = 0.0;
+        public static final double kLeftCameraYaw = -30.0;  // Angled left
 
-        // Camera position relative to robot center (meters)
-        // Update these when camera is mounted
-        public static final double kCameraXOffset = 0.0;
-        public static final double kCameraYOffset = 0.0;
-        public static final double kCameraZOffset = 0.5;
-
-        // Camera rotation (degrees)
-        public static final double kCameraPitch = 0.0;
-        public static final double kCameraYaw = 0.0;
+        // Right camera (mounted on front-right, angled right)
+        public static final String kRightCameraName = "Right";
+        public static final double kRightCameraXOffset = Units.inchesToMeters(15.0);   // Forward from center
+        public static final double kRightCameraYOffset = Units.inchesToMeters(-11.75); // Right of center
+        public static final double kRightCameraZOffset = Units.inchesToMeters(8.0);    // Height from floor
+        public static final double kRightCameraPitch = 0.0;
+        public static final double kRightCameraYaw = 30.0;  // Angled right
     }
 }
