@@ -1,4 +1,11 @@
 {
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/IMU": "Alerts",
+      "/SmartDashboard/JSON": "Alerts"
+    }
+  },
   "NetworkTables Info": {
     "visible": true
   }
