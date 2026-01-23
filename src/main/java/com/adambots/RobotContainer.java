@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 
 import com.adambots.lib.subsystems.SwerveSubsystem;
 import com.adambots.lib.utils.Buttons;
+import com.adambots.lib.utils.Buttons.ControllerType;
 import com.adambots.lib.utils.Buttons.InputCurve;
 
 /**
@@ -27,6 +28,9 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
 
     public RobotContainer() {
+        // Initialize buttons/controllers - Joystick on port 0, no operator controller
+        Buttons.init(0, -1, ControllerType.EXTREME_3D_PRO, ControllerType.NONE);
+
         // Initialize swerve subsystem with YAGSL config directory
         swerve = new SwerveSubsystem(
             new File(Filesystem.getDeployDirectory(), "swerve")
