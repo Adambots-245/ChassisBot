@@ -34,6 +34,11 @@ bin/
 .vscode/
 *.code-workspace
 
+# WPILib Simulation
+ctre_sim/
+networktables.json
+simgui*.json
+
 # macOS
 .DS_Store
 
