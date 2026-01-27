@@ -170,6 +170,7 @@ public class RobotContainer {
      */
     private void setupDashboard() {
         SmartDashboard.putData("Swerve Drive", swerve);
+        SmartDashboard.putData("Field", swerve.getSwerveDrive().field);
     }
 
     /**

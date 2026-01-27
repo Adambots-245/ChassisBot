@@ -40,3 +40,6 @@ bin/
 # Windows
 Thumbs.db
 desktop.ini
+
+# CTRE Simulation
+ctre_sim/
