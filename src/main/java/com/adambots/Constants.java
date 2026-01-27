@@ -1,6 +1,7 @@
 package com.adambots;
 
-import edu.wpi.first.math.util.Units;
+import static edu.wpi.first.units.Units.*;
+import edu.wpi.first.units.measure.*;
 
 /**
  * Constants for ChassisBot testing platform.
@@ -14,19 +15,19 @@ public final class Constants {
      */
     public static final class DriveConstants {
         // Max speeds
-        public static final double kMaxSpeedMetersPerSecond = 4.0;
-        public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI * 2;
+        public static final LinearVelocity kMaxSpeed = MetersPerSecond.of(4.0);
+        public static final AngularVelocity kMaxAngularSpeed = RadiansPerSecond.of(Math.PI * 2);
 
         // Teleop rotation speed multiplier
-        public static final double kTeleopRotationalSpeed = 10.0;
+        public static final AngularVelocity kTeleopRotationalSpeed = RadiansPerSecond.of(10.0);
 
         // Input processing
         public static final double kDeadzone = 0.05;
         public static final double kRotationDeadzone = 0.1;
 
-        // Track width and wheel base (meters) - 24" x 24" chassis
-        public static final double kTrackWidth = Units.inchesToMeters(24.0);
-        public static final double kWheelBase = Units.inchesToMeters(24.0);
+        // Track width and wheel base - 24" x 24" chassis
+        public static final Distance kTrackWidth = Inches.of(24);
+        public static final Distance kWheelBase = Inches.of(24);
     }
 
     /**
@@ -41,13 +42,13 @@ public final class Constants {
         public static final double kTurnGearRatio = 21.43;
 
         // Wheel dimensions (4 inch wheel)
-        public static final double kWheelDiameterMeters = Units.inchesToMeters(4.0);
-        public static final double kWheelRadiusMeters = kWheelDiameterMeters / 2.0;
-        public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
+        public static final Distance kWheelDiameter = Inches.of(4);
+        public static final Distance kWheelRadius = kWheelDiameter.div(2);
+        public static final Distance kWheelCircumference = kWheelDiameter.times(Math.PI);
 
         // Current limits
-        public static final double kDriveCurrentLimit = 40.0;
-        public static final double kTurnCurrentLimit = 20.0;
+        public static final Current kDriveCurrentLimit = Amps.of(40);
+        public static final Current kTurnCurrentLimit = Amps.of(20);
 
         // Coefficient of friction for wheel grip
         public static final double kWheelGripCoefficientOfFriction = 1.19;
@@ -68,8 +69,8 @@ public final class Constants {
         public static final double kDRotation = 0.06;
 
         // Max auto speeds
-        public static final double kMaxAutoSpeed = 3.0;
-        public static final double kMaxAutoAcceleration = 2.0;
+        public static final LinearVelocity kMaxAutoSpeed = MetersPerSecond.of(3.0);
+        public static final LinearAcceleration kMaxAutoAcceleration = MetersPerSecondPerSecond.of(2.0);
     }
 
     /**
@@ -79,18 +80,18 @@ public final class Constants {
     public static final class VisionConstants {
         // Left camera (mounted on front-left, angled left)
         public static final String kLeftCameraName = "Left";
-        public static final double kLeftCameraXOffset = Units.inchesToMeters(15.0);   // Forward from center
-        public static final double kLeftCameraYOffset = Units.inchesToMeters(11.75);  // Left of center
-        public static final double kLeftCameraZOffset = Units.inchesToMeters(8.0);    // Height from floor
-        public static final double kLeftCameraPitch = 0.0;
-        public static final double kLeftCameraYaw = -30.0;  // Angled left
+        public static final Distance kLeftCameraX = Inches.of(15);      // Forward from center
+        public static final Distance kLeftCameraY = Inches.of(11.75);   // Left of center
+        public static final Distance kLeftCameraZ = Inches.of(8);       // Height from floor
+        public static final Angle kLeftCameraPitch = Degrees.of(0);
+        public static final Angle kLeftCameraYaw = Degrees.of(-30);     // Angled left
 
         // Right camera (mounted on front-right, angled right)
         public static final String kRightCameraName = "Right";
-        public static final double kRightCameraXOffset = Units.inchesToMeters(15.0);   // Forward from center
-        public static final double kRightCameraYOffset = Units.inchesToMeters(-11.75); // Right of center
-        public static final double kRightCameraZOffset = Units.inchesToMeters(8.0);    // Height from floor
-        public static final double kRightCameraPitch = 0.0;
-        public static final double kRightCameraYaw = 30.0;  // Angled right
+        public static final Distance kRightCameraX = Inches.of(15);     // Forward from center
+        public static final Distance kRightCameraY = Inches.of(-11.75); // Right of center
+        public static final Distance kRightCameraZ = Inches.of(8);      // Height from floor
+        public static final Angle kRightCameraPitch = Degrees.of(0);
+        public static final Angle kRightCameraYaw = Degrees.of(30);     // Angled right
     }
 }
