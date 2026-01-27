@@ -28,10 +28,3 @@ pluginManagement {
 
 Properties props = System.getProperties();
 props.setProperty("org.gradle.internal.native.headers.unresolved.dependencies.ignore", "true");
-
-// Include AdambotsLib as a composite build for local development
-includeBuild('../AdambotsLib') {
-    dependencySubstitution {
-        substitute module('com.adambots.lib:AdambotsLib-java') using project(':')
-    }
-}
