@@ -10,9 +10,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
+
+import com.adambots.lib.subsystems.SwerveConfig;
 import com.adambots.lib.subsystems.SwerveSubsystem;
 import com.adambots.lib.utils.Buttons;
 import com.adambots.lib.utils.Buttons.InputCurve;
+
+import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * RobotContainer for ChassisBot testing platform.
@@ -27,9 +34,19 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
 
     public RobotContainer() {
-        // Initialize swerve subsystem with YAGSL config directory
+        // Configure swerve with PathPlanner PID values (P=5.0 defaults work well)
+        // Disable cosine compensation, feedforward, and manual odometry for simulation
+        SwerveConfig swerveConfig = new SwerveConfig()
+            .withTranslationPID(5.0, 0.0, 0.0)
+            .withRotationPID(5.0, 0.0, 0.0)
+            .withCosineCompensation(!RobotBase.isSimulation())
+            .withFeedforward(!RobotBase.isSimulation())
+            .withManualOdometry(!RobotBase.isSimulation());
+
+        // Initialize swerve subsystem with YAGSL config directory and config
         swerve = new SwerveSubsystem(
-            new File(Filesystem.getDeployDirectory(), "swerve")
+            new File(Filesystem.getDeployDirectory(), "swerve"),
+            swerveConfig
         );
 
         // Configure default commands
@@ -159,8 +176,38 @@ public class RobotContainer {
     private void setupAutonomousChooser() {
         autoChooser.setDefaultOption("Do Nothing", Commands.none());
 
-        // Add PathPlanner autos as they are created
-        // Example: autoChooser.addOption("Test Path", swerve.getAutonomousCommand("TestPath"));
+        // Add PathPlanner autos
+        autoChooser.addOption("Test Auto", new PathPlannerAuto("TestAuto"));
+
+        // Alternative: Direct path following with explicit pose reset
+        try {
+            PathPlannerPath testPath = PathPlannerPath.fromPathFile("TestPath");
+
+            // Get the starting pose from the path
+            Pose2d startPose = testPath.getStartingHolonomicPose().orElse(
+                new Pose2d(2.0, 2.0, Rotation2d.fromDegrees(0))
+            );
+
+            // Create command that resets pose THEN follows path
+            Command resetAndFollow = Commands.sequence(
+                Commands.runOnce(() -> swerve.resetOdometry(startPose)),
+                Commands.waitSeconds(0.1), // Brief delay for pose to settle
+                AutoBuilder.followPath(testPath)
+            ).withName("Test Path (Reset+Follow)");
+
+            autoChooser.addOption("Test Path Direct", resetAndFollow);
+        } catch (Exception e) {
+            System.err.println("Failed to load TestPath: " + e.getMessage());
+        }
+
+        // Simple drive forward test (uses same method as teleop)
+        autoChooser.addOption("Drive Forward Test",
+            Commands.run(() -> swerve.drive(
+                new edu.wpi.first.math.geometry.Translation2d(1.0, 0.0),
+                0.0,
+                true), swerve)
+                .withTimeout(3.0)
+                .withName("DriveForward3Sec"));
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
