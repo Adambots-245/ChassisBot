@@ -94,4 +94,17 @@ public final class Constants {
         public static final Angle kRightCameraPitch = Degrees.of(0);
         public static final Angle kRightCameraYaw = Degrees.of(30);     // Angled right
     }
+
+    /**
+     * Shooter prototype constants.
+     */
+    public static final class ShooterConstants {
+        // Motor speeds (duty cycle -1.0 to 1.0)
+        public static final double kShooterSpeed = 0.75;
+        public static final double kUptakeSpeed = 0.5;
+
+        // Current limits
+        public static final Current kShooterCurrentLimit = Amps.of(60);
+        public static final Current kUptakeCurrentLimit = Amps.of(40);
+    }
 }

@@ -39,4 +39,9 @@ public class RobotMap {
     // ==================== CANivore Bus Name ====================
     // Use "*" for CANivore auto-detection, or specify bus name
     public static final String kCANivoreBusName = "*";
+
+    // ==================== Shooter Prototype ====================
+    public static final int kShooterLeftPort = 21;   // Kraken X60
+    public static final int kShooterRightPort = 22;  // Kraken X60 (follower)
+    public static final int kUptakePort = 20;        // Kraken X44
 }

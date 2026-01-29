@@ -18,6 +18,7 @@ import com.adambots.lib.subsystems.SwerveConfig;
 import com.adambots.lib.subsystems.SwerveSubsystem;
 import com.adambots.lib.utils.Buttons;
 import com.adambots.lib.utils.Buttons.InputCurve;
+import com.adambots.subsystems.ShooterSubsystem;
 
 import edu.wpi.first.wpilibj.RobotBase;
 
@@ -29,6 +30,7 @@ public class RobotContainer {
 
     // Subsystems
     private final SwerveSubsystem swerve;
+    private final ShooterSubsystem shooter;
 
     // Autonomous chooser
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
@@ -48,6 +50,9 @@ public class RobotContainer {
             new File(Filesystem.getDeployDirectory(), "swerve"),
             swerveConfig
         );
+
+        // Initialize shooter subsystem
+        shooter = new ShooterSubsystem();
 
         // Configure default commands
         setupDefaultCommands();
@@ -218,6 +223,14 @@ public class RobotContainer {
     private void setupDashboard() {
         SmartDashboard.putData("Swerve Drive", swerve);
         SmartDashboard.putData("Field", swerve.getSwerveDrive().field);
+
+        // Shooter commands for Shuffleboard testing
+        SmartDashboard.putData("Shooter/Run Shooter", shooter.runShooterCommand());
+        SmartDashboard.putData("Shooter/Stop Shooter", shooter.stopShooterCommand());
+        SmartDashboard.putData("Shooter/Reverse Shooter", shooter.reverseShooterCommand());
+        SmartDashboard.putData("Shooter/Run Uptake", shooter.runUptakeCommand());
+        SmartDashboard.putData("Shooter/Stop Uptake", shooter.stopUptakeCommand());
+        SmartDashboard.putData("Shooter/Reverse Uptake", shooter.reverseUptakeCommand());
     }
 
     /**
