@@ -29,7 +29,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 public class RobotContainer {
 
     // Subsystems
-    private final SwerveSubsystem swerve;
+    // private final SwerveSubsystem swerve;
     private final ShooterSubsystem shooter;
 
     // Autonomous chooser
@@ -46,10 +46,10 @@ public class RobotContainer {
             .withManualOdometry(!RobotBase.isSimulation());
 
         // Initialize swerve subsystem with YAGSL config directory and config
-        swerve = new SwerveSubsystem(
-            new File(Filesystem.getDeployDirectory(), "swerve"),
-            swerveConfig
-        );
+        // swerve = new SwerveSubsystem(
+        //     new File(Filesystem.getDeployDirectory(), "swerve"),
+        //     swerveConfig
+        // );
 
         // Initialize shooter subsystem
         shooter = new ShooterSubsystem();
@@ -76,25 +76,25 @@ public class RobotContainer {
      *   - Z axis (twist) = rotation
      */
     private void setupDefaultCommands() {
-        swerve.setDefaultCommand(
-            swerve.driveCommand(
-                // Forward/backward - uses Buttons factory method
-                Buttons.createForwardSupplier(
-                    Constants.DriveConstants.kDeadzone,
-                    InputCurve.CUBIC
-                ),
-                // Strafe left/right - uses Buttons factory method
-                Buttons.createStrafeSupplier(
-                    Constants.DriveConstants.kDeadzone,
-                    InputCurve.CUBIC
-                ),
-                // Rotation - uses Buttons factory method
-                Buttons.createRotationSupplier(
-                    Constants.DriveConstants.kRotationDeadzone,
-                    InputCurve.CUBIC
-                )
-            )
-        );
+        // swerve.setDefaultCommand(
+        //     swerve.driveCommand(
+        //         // Forward/backward - uses Buttons factory method
+        //         Buttons.createForwardSupplier(
+        //             Constants.DriveConstants.kDeadzone,
+        //             InputCurve.CUBIC
+        //         ),
+        //         // Strafe left/right - uses Buttons factory method
+        //         Buttons.createStrafeSupplier(
+        //             Constants.DriveConstants.kDeadzone,
+        //             InputCurve.CUBIC
+        //         ),
+        //         // Rotation - uses Buttons factory method
+        //         Buttons.createRotationSupplier(
+        //             Constants.DriveConstants.kRotationDeadzone,
+        //             InputCurve.CUBIC
+        //         )
+        //     )
+        // );
     }
 
     /**
@@ -110,119 +110,119 @@ public class RobotContainer {
      *   POV Hat:            Snap to cardinal headings
      */
     private void configureBindings() {
-        // Button 2 (Thumb) - Zero gyro (reset heading to 0)
-        Buttons.JoystickButton2.onTrue(
-            Commands.runOnce(() -> swerve.zeroGyro())
-                .withName("ZeroGyro")
-        );
+        // // Button 2 (Thumb) - Zero gyro (reset heading to 0)
+        // Buttons.JoystickButton2.onTrue(
+        //     Commands.runOnce(() -> swerve.zeroGyro())
+        //         .withName("ZeroGyro")
+        // );
 
-        // Button 3 - Lock wheels in X pattern (defense)
-        Buttons.JoystickButton3.whileTrue(
-            Commands.run(() -> swerve.lock(), swerve)
-                .withName("LockWheels")
-        );
+        // // Button 3 - Lock wheels in X pattern (defense)
+        // Buttons.JoystickButton3.whileTrue(
+        //     Commands.run(() -> swerve.lock(), swerve)
+        //         .withName("LockWheels")
+        // );
 
-        // Button 4 - Center all modules (wheels straight)
-        Buttons.JoystickButton4.onTrue(
-            swerve.centerModulesCommand()
-        );
+        // // Button 4 - Center all modules (wheels straight)
+        // Buttons.JoystickButton4.onTrue(
+        //     swerve.centerModulesCommand()
+        // );
 
-        // Button 5 - Enable vision pose updates
-        Buttons.JoystickButton5.onTrue(
-            swerve.enableVisionCommand()
-        );
+        // // Button 5 - Enable vision pose updates
+        // Buttons.JoystickButton5.onTrue(
+        //     swerve.enableVisionCommand()
+        // );
 
-        // Button 6 - Disable vision pose updates
-        Buttons.JoystickButton6.onTrue(
-            swerve.disableVisionCommand()
-        );
+        // // Button 6 - Disable vision pose updates
+        // Buttons.JoystickButton6.onTrue(
+        //     swerve.disableVisionCommand()
+        // );
 
-        // POV Hat - Snap to cardinal headings (useful for testing)
-        Buttons.JoystickPOVUp.onTrue(
-            Commands.runOnce(() -> swerve.resetOdometry(
-                new Pose2d(
-                    swerve.getPose().getTranslation(),
-                    Rotation2d.fromDegrees(0)
-                )
-            )).withName("SnapTo0deg")
-        );
+        // // POV Hat - Snap to cardinal headings (useful for testing)
+        // Buttons.JoystickPOVUp.onTrue(
+        //     Commands.runOnce(() -> swerve.resetOdometry(
+        //         new Pose2d(
+        //             swerve.getPose().getTranslation(),
+        //             Rotation2d.fromDegrees(0)
+        //         )
+        //     )).withName("SnapTo0deg")
+        // );
 
-        Buttons.JoystickPOVRight.onTrue(
-            Commands.runOnce(() -> swerve.resetOdometry(
-                new Pose2d(
-                    swerve.getPose().getTranslation(),
-                    Rotation2d.fromDegrees(-90)
-                )
-            )).withName("SnapTo-90deg")
-        );
+        // Buttons.JoystickPOVRight.onTrue(
+        //     Commands.runOnce(() -> swerve.resetOdometry(
+        //         new Pose2d(
+        //             swerve.getPose().getTranslation(),
+        //             Rotation2d.fromDegrees(-90)
+        //         )
+        //     )).withName("SnapTo-90deg")
+        // );
 
-        Buttons.JoystickPOVDown.onTrue(
-            Commands.runOnce(() -> swerve.resetOdometry(
-                new Pose2d(
-                    swerve.getPose().getTranslation(),
-                    Rotation2d.fromDegrees(180)
-                )
-            )).withName("SnapTo180deg")
-        );
+        // Buttons.JoystickPOVDown.onTrue(
+        //     Commands.runOnce(() -> swerve.resetOdometry(
+        //         new Pose2d(
+        //             swerve.getPose().getTranslation(),
+        //             Rotation2d.fromDegrees(180)
+        //         )
+        //     )).withName("SnapTo180deg")
+        // );
 
-        Buttons.JoystickPOVLeft.onTrue(
-            Commands.runOnce(() -> swerve.resetOdometry(
-                new Pose2d(
-                    swerve.getPose().getTranslation(),
-                    Rotation2d.fromDegrees(90)
-                )
-            )).withName("SnapTo90deg")
-        );
+        // Buttons.JoystickPOVLeft.onTrue(
+        //     Commands.runOnce(() -> swerve.resetOdometry(
+        //         new Pose2d(
+        //             swerve.getPose().getTranslation(),
+        //             Rotation2d.fromDegrees(90)
+        //         )
+        //     )).withName("SnapTo90deg")
+        // );
     }
 
     /**
      * Setup autonomous command chooser.
      */
     private void setupAutonomousChooser() {
-        autoChooser.setDefaultOption("Do Nothing", Commands.none());
+        // autoChooser.setDefaultOption("Do Nothing", Commands.none());
 
-        // Add PathPlanner autos
-        autoChooser.addOption("Test Auto", new PathPlannerAuto("TestAuto"));
+        // // Add PathPlanner autos
+        // autoChooser.addOption("Test Auto", new PathPlannerAuto("TestAuto"));
 
-        // Alternative: Direct path following with explicit pose reset
-        try {
-            PathPlannerPath testPath = PathPlannerPath.fromPathFile("TestPath");
+        // // Alternative: Direct path following with explicit pose reset
+        // try {
+        //     PathPlannerPath testPath = PathPlannerPath.fromPathFile("TestPath");
 
-            // Get the starting pose from the path
-            Pose2d startPose = testPath.getStartingHolonomicPose().orElse(
-                new Pose2d(2.0, 2.0, Rotation2d.fromDegrees(0))
-            );
+        //     // Get the starting pose from the path
+        //     Pose2d startPose = testPath.getStartingHolonomicPose().orElse(
+        //         new Pose2d(2.0, 2.0, Rotation2d.fromDegrees(0))
+        //     );
 
-            // Create command that resets pose THEN follows path
-            Command resetAndFollow = Commands.sequence(
-                Commands.runOnce(() -> swerve.resetOdometry(startPose)),
-                Commands.waitSeconds(0.1), // Brief delay for pose to settle
-                AutoBuilder.followPath(testPath)
-            ).withName("Test Path (Reset+Follow)");
+        //     // Create command that resets pose THEN follows path
+        //     Command resetAndFollow = Commands.sequence(
+        //         Commands.runOnce(() -> swerve.resetOdometry(startPose)),
+        //         Commands.waitSeconds(0.1), // Brief delay for pose to settle
+        //         AutoBuilder.followPath(testPath)
+        //     ).withName("Test Path (Reset+Follow)");
 
-            autoChooser.addOption("Test Path Direct", resetAndFollow);
-        } catch (Exception e) {
-            System.err.println("Failed to load TestPath: " + e.getMessage());
-        }
+        //     autoChooser.addOption("Test Path Direct", resetAndFollow);
+        // } catch (Exception e) {
+        //     System.err.println("Failed to load TestPath: " + e.getMessage());
+        // }
 
-        // Simple drive forward test (uses same method as teleop)
-        autoChooser.addOption("Drive Forward Test",
-            Commands.run(() -> swerve.drive(
-                new edu.wpi.first.math.geometry.Translation2d(1.0, 0.0),
-                0.0,
-                true), swerve)
-                .withTimeout(3.0)
-                .withName("DriveForward3Sec"));
+        // // Simple drive forward test (uses same method as teleop)
+        // autoChooser.addOption("Drive Forward Test",
+        //     Commands.run(() -> swerve.drive(
+        //         new edu.wpi.first.math.geometry.Translation2d(1.0, 0.0),
+        //         0.0,
+        //         true), swerve)
+        //         .withTimeout(3.0)
+        //         .withName("DriveForward3Sec"));
 
-        SmartDashboard.putData("Auto Chooser", autoChooser);
+        // SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
     /**
      * Add telemetry to dashboard.
      */
     private void setupDashboard() {
-        SmartDashboard.putData("Swerve Drive", swerve);
-        SmartDashboard.putData("Field", swerve.getSwerveDrive().field);
+        // SmartDashboard.putData("Swerve Drive", swerve);
+        // SmartDashboard.putData("Field", swerve.getSwerveDrive().field);
 
         // Shooter commands for Shuffleboard testing
         SmartDashboard.putData("Shooter/Run Shooter", shooter.runShooterCommand());

@@ -100,8 +100,8 @@ public final class Constants {
      */
     public static final class ShooterConstants {
         // Motor speeds (duty cycle -1.0 to 1.0)
-        public static final double kShooterSpeed = 0.75;
-        public static final double kUptakeSpeed = 0.5;
+        public static final double kShooterSpeed = 1.0;
+        public static final double kUptakeSpeed = 0.75;
 
         // Current limits
         public static final Current kShooterCurrentLimit = Amps.of(60);
