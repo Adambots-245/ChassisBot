@@ -9,6 +9,7 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
@@ -99,9 +100,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
     /**
      * Command to run the shooter while held.
+     * Note: Uses Commands.runEnd() without subsystem requirement so shooter and uptake can run simultaneously.
      */
     public Command runShooterCommand() {
-        return runEnd(this::runShooter, this::stopShooter)
+        return Commands.runEnd(this::runShooter, this::stopShooter)
             .withName("Run Shooter");
     }
 
@@ -109,7 +111,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * Command to reverse the shooter while held.
      */
     public Command reverseShooterCommand() {
-        return runEnd(this::reverseShooter, this::stopShooter)
+        return Commands.runEnd(this::reverseShooter, this::stopShooter)
             .withName("Reverse Shooter");
     }
 
@@ -117,7 +119,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * Command to run the uptake while held.
      */
     public Command runUptakeCommand() {
-        return runEnd(this::runUptake, this::stopUptake)
+        return Commands.runEnd(this::runUptake, this::stopUptake)
             .withName("Run Uptake");
     }
 
@@ -125,7 +127,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * Command to reverse the uptake while held.
      */
     public Command reverseUptakeCommand() {
-        return runEnd(this::reverseUptake, this::stopUptake)
+        return Commands.runEnd(this::reverseUptake, this::stopUptake)
             .withName("Reverse Uptake");
     }
 
@@ -133,7 +135,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * Command to stop the shooter (instant).
      */
     public Command stopShooterCommand() {
-        return runOnce(this::stopShooter)
+        return Commands.runOnce(this::stopShooter)
             .withName("Stop Shooter");
     }
 
@@ -141,7 +143,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * Command to stop the uptake (instant).
      */
     public Command stopUptakeCommand() {
-        return runOnce(this::stopUptake)
+        return Commands.runOnce(this::stopUptake)
             .withName("Stop Uptake");
     }
 
