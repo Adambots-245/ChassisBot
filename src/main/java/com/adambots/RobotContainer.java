@@ -14,7 +14,14 @@ import com.adambots.lib.subsystems.SwerveSubsystem;
 import com.adambots.lib.utils.Buttons;
 import com.adambots.lib.utils.Buttons.ControllerType;
 import com.adambots.lib.utils.Buttons.InputCurve;
+import com.adambots.lib.vision.PhotonVision;
+import com.adambots.lib.vision.VisionSystem;
+import com.adambots.lib.vision.config.VisionCameraConfig.CameraPurpose;
+import com.adambots.lib.vision.config.VisionConfigBuilder;
+import com.adambots.lib.vision.config.VisionSystemConfig;
 import com.adambots.subsystems.QuestNavSubsystem;
+
+import static edu.wpi.first.units.Units.*;
 
 /**
  * RobotContainer for ChassisBot testing platform.
@@ -41,6 +48,9 @@ public class RobotContainer {
         // Initialize QuestNav subsystem for Meta Quest odometry
         questNav = new QuestNavSubsystem(swerve);
 
+        // Setup vision system (uncomment when camera is mounted and configured)
+        // setupVision();
+
         // Configure default commands
         setupDefaultCommands();
 
@@ -52,6 +62,44 @@ public class RobotContainer {
 
         // Add telemetry
         setupDashboard();
+    }
+
+    /**
+     * Configure the vision system using AdambotsLib's VisionSystem abstraction.
+     *
+     * Steps:
+     *   1. Build a VisionSystemConfig with camera positions
+     *   2. Create a PhotonVision instance (implements VisionSystem)
+     *   3. Pass it to swerve via setupVision()
+     *
+     * Update camera position/rotation values in Constants.VisionConstants
+     * to match your actual camera mount.
+     */
+    private void setupVision() {
+        VisionSystemConfig visionConfig = VisionConfigBuilder.create()
+            .addCamera(Constants.VisionConstants.kCameraName)
+                .position(
+                    Meters.of(Constants.VisionConstants.kCameraXOffset),
+                    Meters.of(Constants.VisionConstants.kCameraYOffset),
+                    Meters.of(Constants.VisionConstants.kCameraZOffset)
+                )
+                .rotation(
+                    Degrees.of(0),                                       // roll
+                    Degrees.of(Constants.VisionConstants.kCameraPitch),
+                    Degrees.of(Constants.VisionConstants.kCameraYaw)
+                )
+                .purpose(CameraPurpose.BOTH)
+                .maxTagDistance(Meters.of(Constants.VisionConstants.kMaxTagDistanceMeters))
+                .done()
+            .build();
+
+        VisionSystem vision = new PhotonVision(
+            visionConfig,
+            swerve::getPose,
+            swerve.getField()
+        );
+
+        swerve.setupVision(vision);
     }
 
     /**
