@@ -73,7 +73,8 @@ public final class Constants {
     }
 
     /**
-     * Vision constants for PhotonVision.
+     * Vision constants for camera configuration.
+     * Used with AdambotsLib's VisionSystem abstraction.
      */
     public static final class VisionConstants {
         // Camera name (must match PhotonVision configuration)
@@ -88,5 +89,8 @@ public final class Constants {
         // Camera rotation
         public static final Angle kCameraPitch = Degrees.of(0);
         public static final Angle kCameraYaw = Degrees.of(0);
+
+        // Maximum distance for single-tag pose estimation (tags beyond this are ignored)
+        public static final Distance kMaxTagDistance = Meters.of(4.0);
     }
 }
