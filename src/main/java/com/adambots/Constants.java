@@ -74,7 +74,8 @@ public final class Constants {
     }
 
     /**
-     * Vision constants for PhotonVision.
+     * Vision constants for camera configuration.
+     * Used with AdambotsLib's VisionSystem abstraction.
      * 2025 Robot: 2 front cameras mounted on swerve module structure.
      */
     public static final class VisionConstants {
@@ -93,5 +94,8 @@ public final class Constants {
         public static final Distance kRightCameraZ = Inches.of(8);      // Height from floor
         public static final Angle kRightCameraPitch = Degrees.of(0);
         public static final Angle kRightCameraYaw = Degrees.of(30);     // Angled right
+
+        // Maximum distance for single-tag pose estimation (tags beyond this are ignored)
+        public static final Distance kMaxTagDistance = Meters.of(4.0);
     }
 }

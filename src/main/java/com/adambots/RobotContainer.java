@@ -18,6 +18,11 @@ import com.adambots.lib.subsystems.SwerveConfig;
 import com.adambots.lib.subsystems.SwerveSubsystem;
 import com.adambots.lib.utils.Buttons;
 import com.adambots.lib.utils.Buttons.InputCurve;
+import com.adambots.lib.vision.PhotonVision;
+import com.adambots.lib.vision.VisionSystem;
+import com.adambots.lib.vision.config.VisionCameraConfig.CameraPurpose;
+import com.adambots.lib.vision.config.VisionConfigBuilder;
+import com.adambots.lib.vision.config.VisionSystemConfig;
 
 import edu.wpi.first.wpilibj.RobotBase;
 
@@ -49,6 +54,9 @@ public class RobotContainer {
             swerveConfig
         );
 
+        // Setup vision system (uncomment when cameras are mounted and configured)
+        // setupVision();
+
         // Configure default commands
         setupDefaultCommands();
 
@@ -60,6 +68,58 @@ public class RobotContainer {
 
         // Add telemetry
         setupDashboard();
+    }
+
+    /**
+     * Configure the vision system using AdambotsLib's VisionSystem abstraction.
+     *
+     * Steps:
+     *   1. Build a VisionSystemConfig with camera positions
+     *   2. Create a PhotonVision instance (implements VisionSystem)
+     *   3. Pass it to swerve via setupVision()
+     *
+     * Update camera position/rotation values in Constants.VisionConstants
+     * to match your actual camera mount.
+     */
+    private void setupVision() {
+        VisionSystemConfig visionConfig = VisionConfigBuilder.create()
+            .addCamera(Constants.VisionConstants.kLeftCameraName)
+                .position(
+                    Constants.VisionConstants.kLeftCameraX,
+                    Constants.VisionConstants.kLeftCameraY,
+                    Constants.VisionConstants.kLeftCameraZ
+                )
+                .rotation(
+                    edu.wpi.first.units.Units.Degrees.of(0),        // roll
+                    Constants.VisionConstants.kLeftCameraPitch,
+                    Constants.VisionConstants.kLeftCameraYaw
+                )
+                .purpose(CameraPurpose.BOTH)
+                .maxTagDistance(Constants.VisionConstants.kMaxTagDistance)
+                .done()
+            .addCamera(Constants.VisionConstants.kRightCameraName)
+                .position(
+                    Constants.VisionConstants.kRightCameraX,
+                    Constants.VisionConstants.kRightCameraY,
+                    Constants.VisionConstants.kRightCameraZ
+                )
+                .rotation(
+                    edu.wpi.first.units.Units.Degrees.of(0),        // roll
+                    Constants.VisionConstants.kRightCameraPitch,
+                    Constants.VisionConstants.kRightCameraYaw
+                )
+                .purpose(CameraPurpose.BOTH)
+                .maxTagDistance(Constants.VisionConstants.kMaxTagDistance)
+                .done()
+            .build();
+
+        VisionSystem vision = new PhotonVision(
+            visionConfig,
+            swerve::getPose,
+            swerve.getField()
+        );
+
+        swerve.setupVision(vision);
     }
 
     /**
@@ -217,7 +277,7 @@ public class RobotContainer {
      */
     private void setupDashboard() {
         SmartDashboard.putData("Swerve Drive", swerve);
-        SmartDashboard.putData("Field", swerve.getSwerveDrive().field);
+        SmartDashboard.putData("Field", swerve.getField());
     }
 
     /**
