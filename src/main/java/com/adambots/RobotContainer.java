@@ -4,6 +4,7 @@ import java.io.File;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -11,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 
@@ -18,6 +20,7 @@ import com.adambots.lib.subsystems.SwerveConfig;
 import com.adambots.lib.subsystems.SwerveSubsystem;
 import com.adambots.lib.utils.Buttons;
 import com.adambots.lib.utils.Buttons.InputCurve;
+import com.adambots.lib.utils.Dash;
 import com.adambots.lib.vision.PhotonVision;
 import com.adambots.lib.vision.VisionSystem;
 import com.adambots.lib.vision.config.VisionCameraConfig.CameraPurpose;
@@ -63,6 +66,9 @@ public class RobotContainer {
         // Configure button bindings for testing
         configureBindings();
 
+        //Register Named Commands
+        registerNamedCommands();
+        
         // Setup autonomous chooser
         setupAutonomousChooser();
 
@@ -192,6 +198,11 @@ public class RobotContainer {
             swerve.disableVisionCommand()
         );
 
+        //Button 10 - Print Test
+        Buttons.JoystickButton10.onTrue(
+            Commands.print("Hello Test")
+        );
+
         // POV Hat - Snap to cardinal headings (useful for testing)
         Buttons.JoystickPOVUp.onTrue(
             Commands.runOnce(() -> swerve.resetOdometry(
@@ -238,27 +249,38 @@ public class RobotContainer {
 
         // Add PathPlanner autos
         autoChooser.addOption("Test Auto", new PathPlannerAuto("TestAuto"));
+        autoChooser.addOption("Test Path 1", getAutonomousCommand());
 
-        // Alternative: Direct path following with explicit pose reset
         try {
-            PathPlannerPath testPath = PathPlannerPath.fromPathFile("TestPath");
-
-            // Get the starting pose from the path
-            Pose2d startPose = testPath.getStartingHolonomicPose().orElse(
-                new Pose2d(2.0, 2.0, Rotation2d.fromDegrees(0))
-            );
-
-            // Create command that resets pose THEN follows path
-            Command resetAndFollow = Commands.sequence(
-                Commands.runOnce(() -> swerve.resetOdometry(startPose)),
-                Commands.waitSeconds(0.1), // Brief delay for pose to settle
-                AutoBuilder.followPath(testPath)
-            ).withName("Test Path (Reset+Follow)");
-
-            autoChooser.addOption("Test Path Direct", resetAndFollow);
-        } catch (Exception e) {
+            // PathPlannerPath testPath1 = PathPlannerPath.fromPathFile("TestPath 1");
+            // Command followPath1 = AutoBuilder.followPath(testPath1);
+            // autoChooser.addOption("Test Path 1", followPath1);
+            Command auto1 = new PathPlannerAuto("Auto 1");
+            autoChooser.addOption("Auto 1", auto1);
+        } catch (Exception e){
             System.err.println("Failed to load TestPath: " + e.getMessage());
         }
+
+        // Alternative: Direct path following with explicit pose reset
+        // try {
+        //     PathPlannerPath testPath = PathPlannerPath.fromPathFile("TestPath");
+
+        //     // Get the starting pose from the path
+        //     Pose2d startPose = testPath.getStartingHolonomicPose().orElse(
+        //         new Pose2d(2.0, 2.0, Rotation2d.fromDegrees(0))
+        //     );
+
+        //     // Create command that resets pose THEN follows path
+        //     Command resetAndFollow = Commands.sequence(
+        //         Commands.runOnce(() -> swerve.resetOdometry(startPose)),
+        //         Commands.waitSeconds(0.1), // Brief delay for pose to settle
+        //         AutoBuilder.followPath(testPath)
+        //     ).withName("Test Path (Reset+Follow)");
+
+        //     autoChooser.addOption("Test Path Direct", resetAndFollow);
+        // } catch (Exception e) {
+        //     System.err.println("Failed to load TestPath: " + e.getMessage());
+        // }
 
         // Simple drive forward test (uses same method as teleop)
         autoChooser.addOption("Drive Forward Test",
@@ -272,12 +294,22 @@ public class RobotContainer {
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
+
+    //Register Named Commands for use in Path Planner
+    private void registerNamedCommands(){
+        NamedCommands.registerCommand("Test", Commands.print("Hello Test"));
+    }
+
+
     /**
      * Add telemetry to dashboard.
      */
     private void setupDashboard() {
         SmartDashboard.putData("Swerve Drive", swerve);
         SmartDashboard.putData("Field", swerve.getField());
+        SmartDashboard.putNumber("Robot Direction", swerve.getHeading().getDegrees());
+        Dash.add("Robot Direction", ()->swerve.getHeading().getDegrees());
+        Dash.addCommand("Pose Reset",  Commands.runOnce(() -> swerve.resetOdometry(new Pose2d(new Translation2d(0,0), Rotation2d.fromDegrees(0)))));
     }
 
     /**
