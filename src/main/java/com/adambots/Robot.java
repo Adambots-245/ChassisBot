@@ -1,15 +1,12 @@
 package com.adambots;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
-import com.adambots.lib.utils.Buttons;
-import com.adambots.lib.utils.Buttons.ControllerType;
-
 /**
- * Main Robot class for ChassisBot testing platform.
+ * Main Robot class for standalone vision testing.
+ * No controllers or drive subsystem needed.
  */
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
@@ -17,20 +14,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
-        // Silence joystick connection warnings
-        DriverStation.silenceJoystickConnectionWarning(true);
-
-        // Initialize Buttons BEFORE creating RobotContainer
-        // Port 0 = Joystick (Logitech Extreme 3D Pro)
-        // Port -1 = No operator controller
-        Buttons.init(
-            RobotMap.kJoystickPort,
-            -1,
-            ControllerType.EXTREME_3D_PRO,
-            ControllerType.NONE
-        );
-
-        // Create robot container
+        // Create robot container (vision-only, no controllers needed)
         m_robotContainer = new RobotContainer();
     }
 
