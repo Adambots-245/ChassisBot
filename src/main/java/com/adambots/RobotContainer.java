@@ -21,13 +21,22 @@ import com.adambots.lib.vision.config.VisionConfigBuilder;
 import com.adambots.lib.vision.config.VisionSystemConfig;
 
 /**
- * RobotContainer for ChassisBot testing platform.
- * Uses Logitech Extreme 3D Pro joystick for driving.
+ * RobotContainer for ChassisBot vision testing.
+ * Connects to a local PhotonVision instance to test AprilTag detection
+ * and vision-based pose estimation.
+ *
+ * PhotonVision Setup:
+ *   1. Run PhotonVision locally (java -jar photonvision.jar)
+ *   2. Open http://localhost:5800 in browser
+ *   3. Configure a camera named "Front" in the PV UI
+ *   4. Run this project in simulation (./gradlew simulateJava)
+ *   5. Open Shuffleboard/SmartDashboard to see vision data
  */
 public class RobotContainer {
 
     // Subsystems
     private final SwerveSubsystem swerve;
+    private VisionSystem vision;
 
     // Autonomous chooser
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
@@ -41,8 +50,8 @@ public class RobotContainer {
             new File(Filesystem.getDeployDirectory(), "swerve")
         );
 
-        // Setup vision system (uncomment when camera is mounted and configured)
-        // setupVision();
+        // Setup vision system with local PhotonVision
+        setupVision();
 
         // Configure default commands
         setupDefaultCommands();
@@ -86,7 +95,7 @@ public class RobotContainer {
                 .done()
             .build();
 
-        VisionSystem vision = new PhotonVision(
+        vision = new PhotonVision(
             visionConfig,
             swerve::getPose,
             swerve.getField()
@@ -216,10 +225,34 @@ public class RobotContainer {
     }
 
     /**
-     * Add telemetry to dashboard.
+     * Add telemetry to dashboard for vision testing.
      */
     private void setupDashboard() {
         SmartDashboard.putData("Swerve Drive", swerve);
+        SmartDashboard.putData("Field", swerve.getField());
+
+        // Vision telemetry - runs every cycle to update dashboard
+        if (vision != null) {
+            Commands.run(() -> {
+                SmartDashboard.putBoolean("Vision/Has Target", vision.hasTarget());
+                SmartDashboard.putBoolean("Vision/Available", swerve.isVisionAvailable());
+                SmartDashboard.putNumber("Vision/Closest Tag ID", vision.getClosestVisibleTag());
+
+                // Log data for each visible tag (check common tag IDs)
+                for (int tagId = 1; tagId <= 22; tagId++) {
+                    if (vision.isTagVisible(tagId)) {
+                        double dist = vision.getDistanceFromAprilTag(tagId);
+                        SmartDashboard.putNumber("Vision/Tag " + tagId + " Distance (m)", dist);
+                    }
+                }
+
+                // Log robot pose from odometry
+                var pose = swerve.getPose();
+                SmartDashboard.putNumber("Vision/Robot X (m)", pose.getX());
+                SmartDashboard.putNumber("Vision/Robot Y (m)", pose.getY());
+                SmartDashboard.putNumber("Vision/Robot Heading (deg)", pose.getRotation().getDegrees());
+            }).ignoringDisable(true).withName("VisionTelemetry").schedule();
+        }
     }
 
     /**
